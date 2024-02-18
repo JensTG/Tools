@@ -17,7 +17,7 @@ public:
     unsigned int ID;
 
     // constructor reads and builds the shader
-    Shader(const char* vertexPath, const char* fragmentPath) {
+    Shader(string vertexPath, string fragmentPath, bool fullPath = false) {
         // :::::::::: Get source code ::::::::::
         string vertexCode;
         string fragmentCode;
@@ -26,10 +26,19 @@ public:
         // Ensure ifstreams can throw exceptions:
         vShaderFile.exceptions (ifstream::failbit | istream::badbit);
         fShaderFile.exceptions (ifstream::failbit | istream::badbit);
+        if(!fullPath)
+        {
+            string shaderPath = "C:/VSC_PRO_B/OpenGL/resources/shaders/";
+            vertexPath = shaderPath.append(vertexPath.append(".v"));
+            shaderPath = "C:/VSC_PRO_B/OpenGL/resources/shaders/";
+            fragmentPath = shaderPath.append(fragmentPath.append(".f"));
+            cout << vertexPath << endl;
+            cout << fragmentPath << endl;
+        }
         try
         {
-            vShaderFile.open(vertexPath);
-            fShaderFile.open(fragmentPath);
+            vShaderFile.open(vertexPath.c_str());
+            fShaderFile.open(fragmentPath.c_str());
             stringstream vShaderStream, fShaderStream;
             // Read contents:
             vShaderStream << vShaderFile.rdbuf();
@@ -43,7 +52,7 @@ public:
         }
         catch(ifstream::failure e)
         {
-            cout << "ERROR: Soure file not succesfully read" << endl;
+            cout << "ERROR: Source file not succesfully read" << endl;
         }
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
