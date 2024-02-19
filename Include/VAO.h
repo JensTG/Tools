@@ -15,9 +15,14 @@ class VAO
 {
     public:
     unsigned int ID = 0;
+    vector<float> vertices = {};
+    vector<unsigned int> indices = {};
 
-    VAO(vector<float> vertices, vector<unsigned int> indices)
+    VAO(vector<float> ver, vector<unsigned int> ind)
     {
+        vertices = ver;
+        indices = ind;
+
         unsigned int VBO, EBO;
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
