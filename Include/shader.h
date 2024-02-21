@@ -3,6 +3,9 @@
 #define SHADER_H
 
 #include <C:/VSC_PRO_B/Tools/Include/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <fstream>
@@ -108,6 +111,18 @@ public:
     void setFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    }
+    void setVec2(const std::string& name, glm::vec2 value) const
+    {
+        glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+    }
+    void setVec3(const std::string& name, glm::vec3 value) const
+    {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+    }
+    void setMat4(const std::string& name, glm::mat4 value) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
     }
 };
 
