@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class VAO
@@ -39,6 +40,79 @@ class VAO
         // 4. then set the vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+    }
+    VAO(string shapePath, bool fullPath = false)
+    {
+        vector<float> ver;
+        vector<unsigned int> ind;
+
+        // Define variables for use:
+        string vData;
+        ifstream vFile;
+
+        // Ensure ifstreams can throw exceptions:
+        vFile.exceptions(ifstream::failbit | ifstream::badbit);
+
+        // Process files:
+        try
+        {
+            if(!fullPath) shapePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath; 
+            vFile.open(shapePath.append(".v").c_str());
+            stringstream vStream;
+            vStream << vFile.rdbuf();
+            vFile.close();
+            vData = vStream.str();
+        }
+        catch(ifstream::failure e)
+        {
+            cout << "ERROR: Vertice data not read: " << e.what() << endl;
+        }
+        
+        size_t index = 0;
+        vData.erase(remove_if(vData.begin(), vData.end(), ::isspace), vData.end());
+        while(true)
+        {
+            float value = stof(vData, &index);
+            ver.push_back(value);
+            cout << value << endl;
+            if(vData.length() > index)
+                vData = vData.substr(index + 1);
+            else break;
+        }
+
+        // Define variables for use:
+        string iData;
+        ifstream iFile;
+
+        // Ensure ifstreams can throw exceptions:
+        iFile.exceptions(ifstream::failbit | ifstream::badbit);
+        
+        // Process files:
+        try
+        {
+            if(!fullPath) shapePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath; 
+            iFile.open(shapePath.append(".i").c_str());
+            stringstream iStream;
+            iStream << iFile.rdbuf();
+            iFile.close();
+            iData = iStream.str();
+        }
+        catch(ifstream::failure e)
+        {
+            cout << "ERROR: Indice data not read: " << e.what() << endl;
+        }
+        
+        index = 0;
+        iData.erase(remove_if(iData.begin(), iData.end(), ::isspace), iData.end());
+        while(true)
+        {
+            unsigned int value = (unsigned int)stoi(iData, &index);
+            ind.push_back(value);
+            cout << value << endl;
+            if(iData.length() > index)
+                iData = iData.substr(index + 1);
+            else break;
+        }
     }
     void bind()
     {
