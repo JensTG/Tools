@@ -2,6 +2,10 @@
 #ifndef VAO_H
 #define VAO_H
 
+#ifndef SHAPE_PATH
+#define SHAPE_PATH "C:/VSC_PRO_B/OpenGL/resources/shapes/"
+#endif
+
 #include <C:/VSC_PRO_B/Tools/Include/glad/glad.h> // include glad to get all the required OpenGL headers
 
 #include <string>
@@ -56,7 +60,7 @@ class VAO
         // Process files:
         try
         {
-            if(!fullPath) shapePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath; 
+            if(!fullPath) shapePath = SHAPE_PATH + shapePath; 
             vFile.open(shapePath.append(".v").c_str());
             stringstream vStream;
             vStream << vFile.rdbuf();
@@ -72,7 +76,8 @@ class VAO
         vData.erase(remove_if(vData.begin(), vData.end(), ::isspace), vData.end());
         while(true)
         {
-            float value = stof(vData, &index);
+            try {float value = stof(vData, &index);}
+            catch {break;}
             ver.push_back(value);
             cout << value << endl;
             if(vData.length() > index)
@@ -80,17 +85,11 @@ class VAO
             else break;
         }
 
-        // Define variables for use:
         string iData;
         ifstream iFile;
-
-        // Ensure ifstreams can throw exceptions:
         iFile.exceptions(ifstream::failbit | ifstream::badbit);
-        
-        // Process files:
         try
         {
-            if(!fullPath) shapePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath; 
             iFile.open(shapePath.append(".i").c_str());
             stringstream iStream;
             iStream << iFile.rdbuf();
@@ -100,18 +99,6 @@ class VAO
         catch(ifstream::failure e)
         {
             cout << "ERROR: Indice data not read: " << e.what() << endl;
-        }
-        
-        index = 0;
-        iData.erase(remove_if(iData.begin(), iData.end(), ::isspace), iData.end());
-        while(true)
-        {
-            unsigned int value = (unsigned int)stoi(iData, &index);
-            ind.push_back(value);
-            cout << value << endl;
-            if(iData.length() > index)
-                iData = iData.substr(index + 1);
-            else break;
         }
     }
     void bind()
