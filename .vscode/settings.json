@@ -3,6 +3,8 @@
         "xlocinfo": "cpp",
         "xstring": "cpp",
         "xiosbase": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp",
+        "vector": "cpp"
     }
 }

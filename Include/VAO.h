@@ -1,4 +1,3 @@
-#pragma once
 #ifndef VAO_H
 #define VAO_H
 
@@ -20,13 +19,13 @@ class VAO
 {
     public:
     unsigned int ID = 0;
-    vector<float> vertices = {};
-    vector<unsigned int> indices = {};
+    unsigned int nInd = 0;
 
-    VAO(vector<float> ver, vector<unsigned int> ind)
+    VAO();
+
+    VAO(vector<float> vertices, vector<unsigned int> indices)
     {
-        vertices = ver;
-        indices = ind;
+        nInd = indices.size();
 
         unsigned int VBO, EBO;
         glGenBuffers(1, &VBO);
@@ -45,10 +44,11 @@ class VAO
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
     }
-    VAO(string shapePath, bool fullPath = false)
+
+    VAO(string shapePath)
     {
-        vector<float> ver;
-        vector<unsigned int> ind;
+        vector<float> vertices;
+        vector<unsigned int> indices;
 
         // Define variables for use:
         string vData;
@@ -60,8 +60,9 @@ class VAO
         // Process files:
         try
         {
-            if(!fullPath) shapePath = SHAPE_PATH + shapePath; 
-            vFile.open(shapePath.append(".v").c_str());
+            shapePath = SHAPE_PATH + shapePath + ".v";
+            cout << "Vertices loaded: " << shapePath << endl;
+            vFile.open(shapePath.c_str());
             stringstream vStream;
             vStream << vFile.rdbuf();
             vFile.close();
@@ -76,10 +77,8 @@ class VAO
         vData.erase(remove_if(vData.begin(), vData.end(), ::isspace), vData.end());
         while(true)
         {
-            try {float value = stof(vData, &index);}
-            catch {break;}
-            ver.push_back(value);
-            cout << value << endl;
+            float value = stof(vData, &index);
+            vertices.push_back(value);
             if(vData.length() > index)
                 vData = vData.substr(index + 1);
             else break;
@@ -90,7 +89,10 @@ class VAO
         iFile.exceptions(ifstream::failbit | ifstream::badbit);
         try
         {
-            iFile.open(shapePath.append(".i").c_str());
+            shapePath.pop_back();
+            shapePath += "i";
+            cout << "Indices loaded: " << shapePath << endl;
+            iFile.open(shapePath.c_str());
             stringstream iStream;
             iStream << iFile.rdbuf();
             iFile.close();
@@ -100,7 +102,42 @@ class VAO
         {
             cout << "ERROR: Indice data not read: " << e.what() << endl;
         }
+        index = 0;
+        iData.erase(remove_if(iData.begin(), iData.end(), ::isspace), iData.end());
+        while(true)
+        {
+            unsigned int value = (unsigned int)stof(iData, &index);
+            indices.push_back(value);
+            if(iData.length() > index)
+                iData = iData.substr(index + 1);
+            else break;
+        }
+
+        if(vertices.size() % 3 != 0)
+            cout << "ERROR: Incorrect number of vertice components" << endl;
+        if(indices.size() % 3 != 0)
+            cout << "ERROR: Incorrect number of indices" << endl;
+        
+        nInd = indices.size();
+
+        unsigned int VBO, EBO;
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+        glGenVertexArrays(1, &ID);
+
+        // 1. bind Vertex Array Object
+        glBindVertexArray(ID);
+        // 2. copy our vertices array in a vertex buffer for OpenGL to use
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+        // 3. copy our index array in a element buffer for OpenGL to use
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+        // 4. then set the vertex attributes pointers
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
     }
+    
     void bind()
     {
         glBindVertexArray(ID);
