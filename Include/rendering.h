@@ -53,4 +53,26 @@ vector<T> fileToVector(string filePath)
     return values;
 }
 
+vector<float> transformVector(vector<float> vertices, mat4 trans)
+{
+    vec4 temp;
+    for(int i = 0; i < vertices.size(); i += 3)
+    {
+        temp = vec4(vertices[i], vertices[i + 1], vertices[i + 2], 1);
+        temp *= trans;
+        vertices[i] = temp.x;
+        vertices[i + 1] = temp.y;
+        vertices[i + 2] = temp.z;
+    }
+    return vertices;
+}
+vector<unsigned int> transformVector(vector<unsigned int> indices, int offset)
+{
+    for(int i = 0; i < indices.size(); i++)
+    {
+        indices[i] += offset;
+    }
+    return indices;
+}
+
 #endif

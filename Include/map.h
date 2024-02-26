@@ -18,4 +18,5 @@ using namespace std;
 
 // Multiply vertices by translation, scale and rotation. Combine all vertices and indices, and make VAO for a static environment
 
+
 #endif
