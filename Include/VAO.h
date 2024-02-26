@@ -1,54 +1,12 @@
 #ifndef VAO_H
 #define VAO_H
 
-#ifndef SHAPE_PATH
-#define SHAPE_PATH "C:/VSC_PRO_B/OpenGL/resources/shapes/"
-#endif
-
 #include <C:/VSC_PRO_B/Tools/Include/glad/glad.h> // include glad to get all the required OpenGL headers
+#include <rendering.h>
 
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
 #include <vector>
-#include <algorithm>
 using namespace std;
-
-template<typename T>
-vector<T> fileToVector(string filePath)
-{
-    ifstream file;
-    string data;
-    vector<T> values;
-    // Ensure ifstreams can throw exceptions:
-    file.exceptions(ifstream::failbit | ifstream::badbit);
-
-    // Process files:
-    try
-    {
-        file.open(filePath.c_str());
-        stringstream stream;
-        stream << file.rdbuf();
-        file.close();
-        data = stream.str();
-    }
-    catch(ifstream::failure e)
-    {
-        cout << "ERROR: Vector data not read: " << e.what() << endl;
-    }
-    
-    size_t index = 0;
-    data.erase(remove_if(data.begin(), data.end(), ::isspace), data.end());
-    while(true)
-    {
-        T value = (T)stof(data, &index);
-        values.push_back(value);
-        if(data.length() > index)
-            data = data.substr(index + 1);
-        else break;
-    }
-}
 
 class VAO
 {
@@ -82,71 +40,8 @@ class VAO
 
     VAO(string shapePath)
     {
-        vector<float> vertices;
-        vector<unsigned int> indices;
-
-        // Define variables for use:
-        string vData;
-        ifstream vFile;
-
-        // Ensure ifstreams can throw exceptions:
-        vFile.exceptions(ifstream::failbit | ifstream::badbit);
-
-        // Process files:
-        try
-        {
-            shapePath = SHAPE_PATH + shapePath + ".v";
-            cout << "Vertices loaded: " << shapePath << endl;
-            vFile.open(shapePath.c_str());
-            stringstream vStream;
-            vStream << vFile.rdbuf();
-            vFile.close();
-            vData = vStream.str();
-        }
-        catch(ifstream::failure e)
-        {
-            cout << "ERROR: Vertice data not read: " << e.what() << endl;
-        }
-        
-        size_t index = 0;
-        vData.erase(remove_if(vData.begin(), vData.end(), ::isspace), vData.end());
-        while(true)
-        {
-            float value = stof(vData, &index);
-            vertices.push_back(value);
-            if(vData.length() > index)
-                vData = vData.substr(index + 1);
-            else break;
-        }
-
-        string iData;
-        ifstream iFile;
-        iFile.exceptions(ifstream::failbit | ifstream::badbit);
-        try
-        {
-            shapePath.pop_back();
-            shapePath += "i";
-            cout << "Indices loaded: " << shapePath << endl;
-            iFile.open(shapePath.c_str());
-            stringstream iStream;
-            iStream << iFile.rdbuf();
-            iFile.close();
-            iData = iStream.str();
-        }
-        catch(ifstream::failure e)
-        {
-            cout << "ERROR: Indice data not read: " << e.what() << endl;
-        }
-        index = 0;
-        iData.erase(remove_if(iData.begin(), iData.end(), ::isspace), iData.end());
-        while(true)
-        {
-            unsigned int value = (unsigned int)stof(iData, &index);
-            indices.push_back(value);
-            if(iData.length() > index)
-                iData = iData.substr(index + 1);
-            else break;
-        }
+        vector<float> vertices = fileToVector<float>(shapePath + ".v");
+        vector<unsigned int> indices = fileToVector<unsigned int>(shapePath + ".i");
 
         if(vertices.size() % 3 != 0)
             cout << "ERROR: Incorrect number of vertice components" << endl;
