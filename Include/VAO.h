@@ -13,6 +13,7 @@ class VAO
     public:
     unsigned int ID = 0;
     unsigned int nInd = 0;
+    unsigned int texOffset = 0;
 
     VAO();
 
@@ -49,6 +50,7 @@ class VAO
             cout << "ERROR: Incorrect number of indices" << endl;
         
         nInd = indices.size();
+        texOffset = vertices.size() * sizeof(float);
 
         unsigned int VBO, EBO;
         glGenBuffers(1, &VBO);
@@ -66,6 +68,15 @@ class VAO
         // 4. then set the vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+    }
+
+    void attachTexture(string texPath)
+    {
+        vector<float> textures = fileToVector<float>(texPath + ".t");
+        if(textures.size() % 2 != 0)
+            cout << "ERROR: Incorrect number of texture components" << endl;
+        
+
     }
     
     void bind()
