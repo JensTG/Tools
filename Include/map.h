@@ -37,9 +37,8 @@ vector<VAO> readCollection(string filePath)
         trans = translate(trans, vec3(posX, posY, posZ));
         trans = rotate(trans, radians(degrees), vec3(rotX, rotY, rotZ));
         trans = scale(trans, vec3(scaleX, scaleY, scaleZ));
-        ver = transformVector(ver, trans);
 
-        shapes.push_back(VAO(ver, ind));
+        shapes.push_back(VAO(ver, ind, trans));
     }
 
     return shapes;

@@ -4,8 +4,6 @@
 #include <C:/VSC_PRO_B/Tools/Include/glad/glad.h> // include glad to get all the required OpenGL headers
 #include <rendering.h>
 
-#include <string>
-#include <vector>
 using namespace std;
 
 class VAO
@@ -14,12 +12,12 @@ class VAO
     unsigned int ID = 0;
     unsigned int nInd = 0;
     unsigned int bufferOffset = 0;
+    mat4 transform;
 
-    VAO();
-
-    VAO(vector<float> vertices, vector<unsigned int> indices)
+    VAO(vector<float> vertices, vector<unsigned int> indices, mat4 trans = mat4(1.0f))
     {
         nInd = indices.size();
+        transform = trans;
 
         unsigned int VBO, EBO;
         glGenBuffers(1, &VBO);
@@ -37,14 +35,16 @@ class VAO
         // 4. then set the vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)bufferOffset);
         glEnableVertexAttribArray(0);
+        glBindVertexArray(0);
 
         bufferOffset += vertices.size() * sizeof(float);
     }
 
-    VAO(string shapePath)
+    VAO(string shapePath, mat4 trans = mat4(1.0f))
     {
         vector<float> vertices = fileToVector<float>(shapePath + ".v");
         vector<unsigned int> indices = fileToVector<unsigned int>(shapePath + ".i");
+        transform = trans;
 
         if(vertices.size() % 3 != 0)
             cout << "ERROR: Incorrect number of vertice components" << endl;
@@ -69,6 +69,7 @@ class VAO
         // 4. then set the vertex attributes pointers
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)bufferOffset);
         glEnableVertexAttribArray(0);
+        glBindVertexArray(0);
 
         bufferOffset += vertices.size() * sizeof(float);
     }
@@ -89,6 +90,10 @@ class VAO
     void bind()
     {
         glBindVertexArray(ID);
+    }
+    void applyTransform(Shader program)
+    {
+        program.setMat4("model", transform);
     }
 };
 
