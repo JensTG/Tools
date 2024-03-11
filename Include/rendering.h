@@ -1,6 +1,8 @@
 #ifndef RENDERFUNCS
 #define RENDERFUNCS
 
+#include <C:/VSC_PRO_B/Tools/Include/glad/glad.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
