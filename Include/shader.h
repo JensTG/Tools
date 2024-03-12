@@ -34,8 +34,6 @@ public:
             vertexPath = shaderPath.append(vertexPath.append(".v"));
             shaderPath = "C:/VSC_PRO_B/OpenGL/resources/shaders/";
             fragmentPath = shaderPath.append(fragmentPath.append(".f"));
-            cout << vertexPath << endl;
-            cout << fragmentPath << endl;
         }
         try
         {
