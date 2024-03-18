@@ -13,11 +13,13 @@ class VAO
     unsigned int nInd = 0;
     unsigned int bufferOffset = 0;
     mat4 transform;
+    vec3 color;
 
-    VAO(vector<float> vertices, vector<unsigned int> indices, mat4 trans = mat4(1.0f))
+    VAO(vector<float> vertices, vector<unsigned int> indices, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
     {
         nInd = indices.size();
         transform = trans;
+        color = c;
 
         unsigned int VBO, EBO;
         glGenBuffers(1, &VBO);
@@ -40,11 +42,12 @@ class VAO
         bufferOffset += vertices.size() * sizeof(float);
     }
 
-    VAO(string shapePath, mat4 trans = mat4(1.0f))
+    VAO(string shapePath, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
     {
         vector<float> vertices = fileToVector<float>(shapePath + ".v");
         vector<unsigned int> indices = fileToVector<unsigned int>(shapePath + ".i");
         transform = trans;
+        color = c;
 
         if(vertices.size() % 3 != 0)
             cout << "ERROR: Incorrect number of vertice components" << endl;
