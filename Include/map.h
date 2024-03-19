@@ -21,8 +21,13 @@ using namespace std;
 
 // Multiply vertices by translation, scale and rotation. Combine all vertices and indices, and make VAO for a static environment
 
-vector<VAO> readCollection(string filePath)
+vector<VAO> readCollection(string filePath, bool fullPath = false)
 {
+    if(!fullPath)
+    {
+        string basePath = "C:/VSC_PRO_B/OpenGL/resources/collections/";
+        filePath = basePath.append(filePath.append(".col"));
+    }
     vector<VAO> shapes = {};
     ifstream file(filePath.c_str());
     
@@ -30,8 +35,9 @@ vector<VAO> readCollection(string filePath)
     string shapePath;
     while (file >> shapePath >> posX >> posY >> posZ >> scaleX >> scaleY >> scaleZ >> degrees >> rotX >> rotY >> rotZ)
     {
-        vector<float> ver = fileToVector<float>(shapePath + ".v");
-        vector<unsigned int> ind = fileToVector<unsigned int>(shapePath + ".i");
+        cout << "C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath + ".v" << endl;
+        vector<float> ver = fileToVector<float>("C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath + ".v");
+        vector<unsigned int> ind = fileToVector<unsigned int>("C:/VSC_PRO_B/OpenGL/resources/shapes/" + shapePath + ".i");
         
         mat4 trans = mat4(1.0f);
         trans = translate(trans, vec3(posX, posY, posZ));

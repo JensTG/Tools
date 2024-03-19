@@ -14,6 +14,7 @@ class VAO
     unsigned int bufferOffset = 0;
     mat4 transform;
     vec3 color;
+    Shader* program = &Shader("direct", "red");
 
     VAO(vector<float> vertices, vector<unsigned int> indices, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
     {
@@ -42,8 +43,13 @@ class VAO
         bufferOffset += vertices.size() * sizeof(float);
     }
 
-    VAO(string shapePath, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
+    VAO(string shapePath, bool fullPath = false, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
     {
+        if(!fullPath)
+        {
+            string basePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/";
+            shapePath = basePath.append(shapePath);
+        }
         vector<float> vertices = fileToVector<float>(shapePath + ".v");
         vector<unsigned int> indices = fileToVector<unsigned int>(shapePath + ".i");
         transform = trans;
@@ -77,8 +83,14 @@ class VAO
         bufferOffset += vertices.size() * sizeof(float);
     }
 
-    void attachTexture(string texPath)
+    void attachTexture(string texPath, bool fullPath = false)
     {
+        if(!fullPath)
+        {
+            string basePath = "C:/VSC_PRO_B/OpenGL/resources/shapes/";
+            texPath = basePath.append(texPath);
+        }
+
         glBindVertexArray(ID);
         vector<float> textures = fileToVector<float>(texPath + ".t");
         if(textures.size() % 2 != 0)
@@ -94,7 +106,7 @@ class VAO
     {
         glBindVertexArray(ID);
     }
-    void applyTransform(Shader program)
+    void applyTransform()
     {
         program.setMat4("model", transform);
     }
