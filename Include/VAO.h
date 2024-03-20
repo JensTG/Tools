@@ -12,38 +12,16 @@ class VAO
     unsigned int ID = 0;
     unsigned int nInd = 0;
     unsigned int bufferOffset = 0;
-    mat4 transform;
-    vec3 color;
-    Shader* program = &Shader("direct", "red");
+    mat4 transform = mat4(1.0f);
+    vec3 color = vec3(1.0f, 1.0f, 1.0f);
+    Shader program = Shader("direct", "red");
 
-    VAO(vector<float> vertices, vector<unsigned int> indices, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
+    VAO(vector<float> vertices, vector<unsigned int> indices)
     {
-        nInd = indices.size();
-        transform = trans;
-        color = c;
-
-        unsigned int VBO, EBO;
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-        glGenVertexArrays(1, &ID);
-
-        // 1. bind Vertex Array Object
-        glBindVertexArray(ID);
-        // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-        // 3. copy our index array in a element buffer for OpenGL to use
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-        // 4. then set the vertex attributes pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)bufferOffset);
-        glEnableVertexAttribArray(0);
-        glBindVertexArray(0);
-
-        bufferOffset += vertices.size() * sizeof(float);
+        bufferData(vertices, indices);
     }
 
-    VAO(string shapePath, bool fullPath = false, mat4 trans = mat4(1.0f), vec3 c = vec3(1.0f, 1.0f, 1.0f))
+    VAO(string shapePath, bool fullPath = false)
     {
         if(!fullPath)
         {
@@ -52,35 +30,13 @@ class VAO
         }
         vector<float> vertices = fileToVector<float>(shapePath + ".v");
         vector<unsigned int> indices = fileToVector<unsigned int>(shapePath + ".i");
-        transform = trans;
-        color = c;
 
         if(vertices.size() % 3 != 0)
             cout << "ERROR: Incorrect number of vertice components" << endl;
         if(indices.size() % 3 != 0)
             cout << "ERROR: Incorrect number of indices" << endl;
         
-        nInd = indices.size();
-
-        unsigned int VBO, EBO;
-        glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
-        glGenVertexArrays(1, &ID);
-
-        // 1. bind Vertex Array Object
-        glBindVertexArray(ID);
-        // 2. copy our vertices array in a vertex buffer for OpenGL to use
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-        // 3. copy our index array in a element buffer for OpenGL to use
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-        // 4. then set the vertex attributes pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)bufferOffset);
-        glEnableVertexAttribArray(0);
-        glBindVertexArray(0);
-
-        bufferOffset += vertices.size() * sizeof(float);
+        bufferData(vertices, indices);
     }
 
     void attachTexture(string texPath, bool fullPath = false)
@@ -101,7 +57,31 @@ class VAO
         glBindVertexArray(0);
         bufferOffset += textures.size() * sizeof(float);
     }
-    
+    void bufferData(vector<float> vertices, vector<unsigned int> indices)
+    {
+        nInd = indices.size();
+
+        unsigned int VBO, EBO;
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
+        glGenVertexArrays(1, &ID);
+
+        // 1. bind Vertex Array Object
+        glBindVertexArray(ID);
+        // 2. copy our vertices array in a vertex buffer for OpenGL to use
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+        // 3. copy our index array in a element buffer for OpenGL to use
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+        // 4. then set the vertex attributes pointers
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)bufferOffset);
+        glEnableVertexAttribArray(0);
+        glBindVertexArray(0);
+
+        bufferOffset += vertices.size() * sizeof(float);
+    }
+
     void bind()
     {
         glBindVertexArray(ID);
