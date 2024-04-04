@@ -17,9 +17,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <massInclude/assimp.h>
+
 #include <shader.h>
 #include <VAO.h>
-using namespace glm;
+#include <mesh.h>
+#include <model.h>
 using namespace std;
 
 template<typename T>
@@ -35,12 +38,12 @@ vector<T> fileToVector(string filePath)
     return values;
 }
 
-vector<float> transformVector(vector<float> vertices, mat4 trans)
+vector<float> transformVector(vector<float> vertices, glm::mat4 trans)
 {
-    vec4 temp;
+    glm::vec4 temp;
     for(int i = 0; i < vertices.size(); i += 3)
     {
-        temp = vec4(vertices[i], vertices[i + 1], vertices[i + 2], 1.0f);
+        temp = glm::vec4(vertices[i], vertices[i + 1], vertices[i + 2], 1.0f);
         temp = trans * temp;
         vertices[i] = temp.x;
         vertices[i + 1] = temp.y;

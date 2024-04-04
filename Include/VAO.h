@@ -4,6 +4,7 @@
 #include <C:/VSC_PRO_B/Tools/Include/glad/glad.h> // include glad to get all the required OpenGL headers
 #include <rendering.h>
 
+using namespace glm;
 using namespace std;
 
 class VAO
@@ -14,7 +15,7 @@ class VAO
     unsigned int bufferOffset = 0;
     mat4 transform = mat4(1.0f);
     vec3 color = vec3(1.0f, 1.0f, 1.0f);
-    Shader program = Shader("direct", "red");
+    Shader* program;
 
     VAO(vector<float> vertices, vector<unsigned int> indices)
     {
@@ -88,7 +89,7 @@ class VAO
     }
     void applyTransform()
     {
-        program.setMat4("model", transform);
+        program->setMat4("model", transform);
     }
 };
 

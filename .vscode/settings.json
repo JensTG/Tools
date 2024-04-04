@@ -7,7 +7,8 @@
         "iostream": "cpp",
         "vector": "cpp",
         "iosfwd": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "xutility": "cpp"
     },
     "cmake.configureOnOpen": false
 }

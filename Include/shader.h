@@ -102,36 +102,56 @@ public:
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniform1i(loc, (int)value);
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
     void setInt(const std::string& name, int value) const
     {
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniform1i(loc, value);
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
     void setFloat(const std::string& name, float value) const
     {
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniform1f(loc, value);
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
     void setVec2(const std::string& name, glm::vec2 value) const
     {
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniform2fv(loc, 1, glm::value_ptr(value));
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
     void setVec3(const std::string& name, glm::vec3 value) const
     {
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniform3fv(loc, 1, glm::value_ptr(value));
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
+    }
+    void setVec3(const std::string& name, float x, float y, float z) const
+    {
+        int loc = glGetUniformLocation(ID, name.c_str());
+        if(loc != -1)
+            glUniform3fv(loc, 1, glm::value_ptr(glm::vec3(x, y, z)));
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
     void setMat4(const std::string& name, glm::mat4 value) const
     {
         int loc = glGetUniformLocation(ID, name.c_str());
         if(loc != -1)
             glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
     }
 };
 
