@@ -37,39 +37,39 @@ struct SpotLight {
     float outerCutOff;
 };
 
-void applyLights(vector<DirectLight> dLights, vector<PointLight> pLights, vector<SpotLight> sLights, Shader &shader) {
+void applyLights(vector<DirectLight*> dLights, vector<PointLight*> pLights, vector<SpotLight*> sLights, Shader &shader) {
     for(unsigned int i = 0; i < dLights.size(); i++) {
-        string lightIndex = string("dLights[").append(to_string(i)).append("].");
+        string lightIndex = string("dLights[") + to_string(i) + string("].");
 
-        shader.setVec3(lightIndex + "direction", dLights[i].direction);
-        shader.setVec3(lightIndex + "ambient", dLights[i].ambient);
-        shader.setVec3(lightIndex + "diffuse", dLights[i].diffuse);
-        shader.setVec3(lightIndex + "specular", dLights[i].specular);
+        shader.setVec3(lightIndex + "direction", dLights[i]->direction);
+        shader.setVec3(lightIndex + "ambient", dLights[i]->ambient);
+        shader.setVec3(lightIndex + "diffuse", dLights[i]->diffuse);
+        shader.setVec3(lightIndex + "specular", dLights[i]->specular);
     }
 
     for(unsigned int i = 0; i < pLights.size(); i++) {
-        string lightIndex = string("pLights[").append(to_string(i)).append("].");
+        string lightIndex = string("pLights[") + to_string(i) + string("].");
 
-        shader.setVec3(lightIndex + "position", pLights[i].position);
-        shader.setVec3(lightIndex + "ambient", pLights[i].ambient);
-        shader.setVec3(lightIndex + "diffuse", pLights[i].diffuse);
-        shader.setVec3(lightIndex + "specular", pLights[i].specular);
+        shader.setVec3(lightIndex + "position", pLights[i]->position);
+        shader.setVec3(lightIndex + "ambient", pLights[i]->ambient);
+        shader.setVec3(lightIndex + "diffuse", pLights[i]->diffuse);
+        shader.setVec3(lightIndex + "specular", pLights[i]->specular);
 
-        shader.setFloat(lightIndex + "constant", pLights[i].constant);
-        shader.setFloat(lightIndex + "linear", pLights[i].linear);
-        shader.setFloat(lightIndex + "quadratic", pLights[i].quadratic);
+        shader.setFloat(lightIndex + "constant", pLights[i]->constant);
+        shader.setFloat(lightIndex + "linear", pLights[i]->linear);
+        shader.setFloat(lightIndex + "quadratic", pLights[i]->quadratic);
     }
 
     for(unsigned int i = 0; i < sLights.size(); i++) {
-        string lightIndex = string("sLights[").append(to_string(i)).append("].");
+        string lightIndex = string("sLights[") + to_string(i) + string("].");
 
-        shader.setVec3(lightIndex + "direction", sLights[i].direction);
-        shader.setVec3(lightIndex + "position", sLights[i].position);
-        shader.setVec3(lightIndex + "ambient", sLights[i].ambient);
-        shader.setVec3(lightIndex + "diffuse", sLights[i].diffuse);
-        shader.setVec3(lightIndex + "specular", sLights[i].specular);
+        shader.setVec3(lightIndex + "direction", sLights[i]->direction);
+        shader.setVec3(lightIndex + "position", sLights[i]->position);
+        shader.setVec3(lightIndex + "ambient", sLights[i]->ambient);
+        shader.setVec3(lightIndex + "diffuse", sLights[i]->diffuse);
+        shader.setVec3(lightIndex + "specular", sLights[i]->specular);
 
-        shader.setFloat(lightIndex + "cutOff", sLights[i].cutOff);
-        shader.setFloat(lightIndex + "outerCutOff", sLights[i].outerCutOff);
+        shader.setFloat(lightIndex + "cutOff", sLights[i]->cutOff);
+        shader.setFloat(lightIndex + "outerCutOff", sLights[i]->outerCutOff);
     }
 }

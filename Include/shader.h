@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <vector>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -152,6 +153,14 @@ public:
             glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(value));
         else
             cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl; 
+    }
+    void setIntegerArray(const std::string& name, int values[]) 
+    {
+        int loc = glGetUniformLocation(ID, name.c_str());
+        if(loc != -1)
+            glUniform1iv(loc, sizeof(values), values);
+        else
+            cout << "ERROR::UNIFORM_NOT_FOUND: " << name << endl;
     }
 };
 
